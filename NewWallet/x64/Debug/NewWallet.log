@@ -1,0 +1,30 @@
+﻿  Source.cpp
+c:\users\second\source\repos\newwallet\walletoop\newwallet\categorystuck.h(55): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\categorystuck.h(59): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\curencystock.h(58): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\curencystock.h(63): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\curencystock.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Wallet.cpp
+c:\users\second\source\repos\newwallet\walletoop\newwallet\categorystuck.h(55): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\categorystuck.h(59): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\curencystock.h(58): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\curencystock.h(63): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\curencystock.h(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(264): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(265): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(279): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(289): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(290): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(303): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(304): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(306): warning C4838: conversion from 'double' to 'SHORT' requires a narrowing conversion
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(306): warning C4244: 'initializing': conversion from 'double' to 'SHORT', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(350): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(355): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(359): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(392): warning C4101: 'index_selected_category': unreferenced local variable
+  Generating Code...
+c:\users\second\source\repos\newwallet\walletoop\newwallet\categorystuck.h(108): warning C4715: 'Category::choiseCat': not all control paths return a value
+c:\users\second\source\repos\newwallet\walletoop\newwallet\categorystuck.h(94): warning C4172: returning address of local variable or temporary
+c:\users\second\source\repos\newwallet\walletoop\newwallet\categorystuck.h(72): warning C4172: returning address of local variable or temporary
+  NewWallet.vcxproj -> C:\Users\second\source\repos\NewWallet\WalletOOP\x64\Debug\NewWallet.exe
