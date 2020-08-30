@@ -9,9 +9,9 @@ c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(124): war
 c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(138): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
 c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(191): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
 c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(192): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
-c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(201): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
-c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(269): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
-c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(270): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(260): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(261): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(311): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
 c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(175): warning C4101: 'csbiInfo': unreferenced local variable
   Wallet.cpp
 c:\users\second\source\repos\newwallet\walletoop\newwallet\categorystuck.h(55): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
@@ -24,9 +24,9 @@ c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(124): war
 c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(138): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
 c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(191): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
 c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(192): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
-c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(201): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
-c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(269): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
-c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(270): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(260): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(261): warning C4244: '=': conversion from 'double' to 'LONG', possible loss of data
+c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(311): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
 c:\users\second\source\repos\newwallet\walletoop\newwallet\organizer.h(175): warning C4101: 'csbiInfo': unreferenced local variable
 c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(264): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 c:\users\second\source\repos\newwallet\walletoop\newwallet\wallet.cpp(265): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data

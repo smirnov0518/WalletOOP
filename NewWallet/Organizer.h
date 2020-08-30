@@ -76,7 +76,7 @@ private:
 	void exitInitEvent();
 public:
 	Organizer()  { 
-		//initEvent();
+		initEvent();
 		SYSTEMTIME stime;
 		FILETIME ltime;
 		FILETIME ftTimeStamp;
@@ -88,7 +88,7 @@ public:
 		currentDate.weekDay = 7 - ((stime.wDay - currentDate.weekDay) % 7);	// here we count at which day of week starts this month (for print)
 		currentDate.controlDates();
 	}
-	~Organizer() { }//exitInitEvent(); }
+	~Organizer() { exitInitEvent(); }
 	int walkByCallend();
 	short addNewEvent(const date & dat);
 	void deleteEvent(size_t index);
@@ -193,16 +193,7 @@ inline int Organizer::walkByCallend()
 
 		// this loop is for walking at callend by mouse and painting days
 		// when some day was picked two variables go by days array at the same time and search which day we have picked
-		if (P.x % 8 < 4 && P.y % 2 == 0 && P.x > 0 && P.y > 0) {    // condition for checkin if mouse is within some day in callend
-			auto res = find(std::begin(arr), std::end(arr), position{ P.x,P.y });	
-			if (res-std::begin(arr) == pos || res==std::end(arr))continue;	// now pos keeps previous picked day
-			gotopaint(arr[pos].x, arr[pos].y, pos + 1, 0);
-			//if (arr[pos].value) textPaint(arr[pos].value);
-			pos = res - std::begin(arr);			// update pos
-			gotoxy(arr[pos].x, arr[pos].y);
-			cout << pos + 1;///////////////////////////////////////////////////////////////////////////////////
-			gotopaint(res->x, res->y, pos + 1, 1);
-		}
+		
 
 		if (prev) {  // repainting buttons in common color when we used to pick them
 			if ((abs(P.y - 19) > 0) || P.x < 5 || P.x > 14) {
@@ -235,7 +226,7 @@ inline int Organizer::walkByCallend()
 	base:
 
 
-		if (GetKeyState(VK_LBUTTON) & 0x8000) { // clock left mouse button
+		if (GetKeyState(VK_LBUTTON) & 0x8000) { // click left mouse button
 
 			Sleep(100);
 			if (!prev && !next) {
@@ -270,7 +261,7 @@ inline int Organizer::walkByCallend()
 					P.y = (((P.y - rect.top) - 40) / 13.5);
 					if (P.y == 3) {
 						if (P.x >= 58 && P.x <= 68) {
-							if (addnew)goto out;
+							if (addnew)goto out;	// avoid blinkin
 							gotopaint(60, 3, "ADD NEW", 1);
 							addnew = 1;
 						}
@@ -312,18 +303,23 @@ inline int Organizer::walkByCallend()
 			if (next)return 1;
 
 		}
+
+		if (P.x % 8 < 4 && P.y % 2 == 0 && P.x > 0 && P.y > 0) {    // condition for checkin if mouse is within some day in callend
+			auto res = find(std::begin(arr), std::end(arr), position{ P.x,P.y });
+			if (res - std::begin(arr) == pos || res == std::end(arr))continue;	// now pos keeps previous picked day
+			gotopaint(arr[pos].x, arr[pos].y, pos + 1, 0);
+			pos = res - std::begin(arr);			// update pos
+			gotoxy(arr[pos].x, arr[pos].y);
+			cout << pos + 1;///////////////////////////////////////////////////////////////////////////////////
+			gotopaint(res->x, res->y, pos + 1, 1);
+		}
+
 		char exit = 0;
 		if (_kbhit()) {
 			exit = _getch();
 		}
 		if (exit == 27)return 27;
 	}
-
-
-
-	cin >> cho;
-	if (cho == 1 || cho == 0)currentDate.weekDay=weekDay;	// we change curent.weekDay in case if change month, otherwise callend remains the same
-	return cho;
 }
 
 inline short Organizer::addNewEvent(const date & dat)
