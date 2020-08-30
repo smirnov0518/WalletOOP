@@ -9,10 +9,30 @@ using namespace std;
 #define WHITE SetConsoleTextAttribute(handle, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED);
 #define WHITE_BLACK SetConsoleTextAttribute(handle,112)
 #define BLUE SetConsoleTextAttribute(handle, 3)
-#define GREN SetConsoleTextAttribute(handle, 10)
+#define GREEN SetConsoleTextAttribute(handle, 10)
 #define ORANGE SetConsoleTextAttribute(handle, 14)
-
 #define MOVE_CONSOLE_POINTER SetConsoleCursorPosition(handle,{0,0});
+
+struct date {
+	int min = 0;
+	int hour = 0;
+	int day = 0;
+	int mon = 0;
+	int year = 0;
+	date() = default;
+	date(initializer_list<int>li){ *this=li;}
+	date(int year, int mon, int day) {
+		this->year = year;		this->mon = mon;	this->day = day;
+	}
+	void operator = (initializer_list<int>li) {
+		min = *(li.begin());		hour = *(li.begin() + 1);	day = *(li.begin() + 2);
+		mon = *(li.begin() + 3);		year = *(li.begin() + 4);
+	}
+	bool operator==(const date& objDate)const
+	{
+		return (objDate.year == year && objDate.mon == mon && objDate.day == day);
+	}
+};
 inline void gotoxy(int x, int y)
 {
 	COORD coord;
@@ -20,7 +40,29 @@ inline void gotoxy(int x, int y)
 	coord.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
+inline void getxy(int & x, int & y)
+{
 
+	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbiInfo);
+	x = csbiInfo.dwCursorPosition.X;
+	y = csbiInfo.dwCursorPosition.Y;
+}
+
+inline void textPaint(short importance) {
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (importance == 1) GREEN;
+	else if (importance == 2) ORANGE;
+	else if (importance == 3) RED
+}
+template <typename mytype>
+void gotopaint(int a, int b, mytype name, bool paint) {
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	gotoxy(a, b);
+	if (paint)SetConsoleTextAttribute(handle, 64);
+	cout << name;
+	SetConsoleTextAttribute(handle, 15);
+}
 inline int walkByevents(int maximum, int min, int x) {
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	RED

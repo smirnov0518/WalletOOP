@@ -10,15 +10,28 @@ using std::string;		using std::cout;
 using std::vector;		using std::fstream;
 
 struct event {
+	//HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	string name;
 	date eventDate;
+	event() = default;
+	event(int year, int mon, int day) : eventDate(year,mon,day){}
 	short importance = 1;
-	bool operator == (const date & dat) { return dat.year == eventDate.year && dat.mon == eventDate.mon; }
+	bool operator == (const date & dat) { return dat.year == eventDate.year && dat.mon == eventDate.mon && dat.day == eventDate.day; }
+	bool operator == (const pair<int,int> & dat) { return dat.first == eventDate.year && dat.second == eventDate.mon; }
+	void print()const {
+		textPaint(importance);
+		cout << (eventDate.hour < 10 ? "0" : "") << eventDate.hour << ":"
+			<< (eventDate.min < 10 ? "0" : "") << eventDate.min << "   " << name;
+		//WHITE
+	}
 };
-struct posision {
+struct position {
 	int x;
 	int y;
 	short value = 0;
+	bool operator == (const position & other) {
+		return (abs(x - other.x) < 4 && abs(y - other.y) < 2);
+	}
 };
 
 struct fullDate : public date {
@@ -72,13 +85,15 @@ public:
 		FileTimeToSystemTime(&ltime, &stime);
 		currentDate = { stime.wMinute,stime.wHour,stime.wDay, stime.wMonth, stime.wYear, stime.wDayOfWeek};
 		!stime.wDayOfWeek ? currentDate.weekDay = 7 : currentDate.weekDay = stime.wDayOfWeek;
+		currentDate.weekDay = 7 - ((stime.wDay - currentDate.weekDay) % 7);	// here we count at which day of week starts this month (for print)
 		currentDate.controlDates();
 	}
 	~Organizer() { }//exitInitEvent(); }
 	int walkByCallend();
-	void addNewEvent(const date & dat);
-	void deleteEvent();
+	short addNewEvent(const date & dat);
+	void deleteEvent(size_t index);
 	void menu();
+	int printCallend(position arr[31]);
 };
 
 inline void Organizer::initEvent() {
@@ -114,27 +129,21 @@ inline void Organizer::exitInitEvent()
 	}
 	out.close();
 }
-
-inline int Organizer::walkByCallend()
+inline int Organizer::printCallend(position arr[31])
 {
-	date toFunction;
-	posision arr[31];
-	RECT rect;
-	HWND hwnd = GetConsoleWindow();
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-
 	cout << "\t\t    Year  " << currentDate.year << "  Mounth " << currentDate.mon << endl << endl;
 	cout << "Mon\tTue\tWed\tThu\tFri\tSut\tSun" << endl << endl;
-	auto startIt = find(events.begin(), events.end(), currentDate);	// find first element 
-	int startInd = startIt-events.begin();
-	for (int i = 0; i < currentDate.weekDay; i++) {  // empty spaces for correct callend 
+	auto startIt = find(events.begin(), events.end(), std::pair<int, int>{currentDate.year, currentDate.mon});	// find first element 
+	int startInd = startIt - events.begin();
+	int weekDay = currentDate.weekDay;
+	for (int i = 0; i < weekDay; i++) {  // empty spaces for correct callend 
 		cout << " \t";
 	}
 	for (int i = 1; i <= currentDate.daysInMon; i++) {				  // 1 row is for 1 week, thats why make "endl" after evety sunday
-		if (currentDate.weekDay % 7 == 0) {
+		if (weekDay % 7 == 0) {
 			cout << endl << endl;
-			currentDate.weekDay = 0;
+			weekDay = 0;
 		}
 		getxy(arr[i - 1].x, arr[i - 1].y);			  // for paintin days in color we need to keep their positions, getxy does it
 		if (startInd < events.size() && events[startInd].eventDate == currentDate) {
@@ -153,11 +162,177 @@ inline int Organizer::walkByCallend()
 		textPaint(arr[i - 1].value);
 		cout << i << "\t";
 		WHITE
-		currentDate.weekDay++;
+			weekDay++;
 	}
-	cout << "\n\n"; int cho = 0;
+	cout << "\n\n";			return weekDay;
+}
+inline int Organizer::walkByCallend()
+{
+	position arr[31];
+	RECT rect;
+	HWND hwnd = GetConsoleWindow();
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
+
+	int weekDay = printCallend(arr);
+	int cho = 0;
+
+	int pos = 17;				// this variable serves to keep which day was picked by mouse last
+	gotopaint(arr[pos].x, arr[pos].y, pos + 1, 1);  // start position when we open calend or come to other month
+
+	bool prev = 0, next = 0, addnew = 0, del = 0;		// bools for deny blinkin
+	gotopaint(5, 19, "PREVIOUS", 0);			// buttons for navigate by monthes
+	gotopaint(29, 19, "NEXT", 0);
+
+	for (;;) { // event loop
+		POINT P;
+		GetCursorPos(&P);						// discover position of mouse cursor relatively screen
+		GetWindowRect(hwnd, &rect);				// this funtion put the information about console window in descriptor
+		P.x = (P.x - rect.left) / 8.19;			// here we take mouse position relatively window and change its coordinates into text coordinates
+		P.y = (((P.y - rect.top) - 40) / 13.5);
+
+		// this loop is for walking at callend by mouse and painting days
+		// when some day was picked two variables go by days array at the same time and search which day we have picked
+		if (P.x % 8 < 4 && P.y % 2 == 0 && P.x > 0 && P.y > 0) {    // condition for checkin if mouse is within some day in callend
+			auto res = find(std::begin(arr), std::end(arr), position{ P.x,P.y });	
+			if (res-std::begin(arr) == pos || res==std::end(arr))continue;	// now pos keeps previous picked day
+			gotopaint(arr[pos].x, arr[pos].y, pos + 1, 0);
+			//if (arr[pos].value) textPaint(arr[pos].value);
+			pos = res - std::begin(arr);			// update pos
+			gotoxy(arr[pos].x, arr[pos].y);
+			cout << pos + 1;///////////////////////////////////////////////////////////////////////////////////
+			gotopaint(res->x, res->y, pos + 1, 1);
+		}
+
+		if (prev) {  // repainting buttons in common color when we used to pick them
+			if ((abs(P.y - 19) > 0) || P.x < 5 || P.x > 14) {
+				gotoxy(5, 19);     cout << "PREVIOUS";
+				prev = 0;
+			}
+		}
+		if (next) {
+			if ((abs(P.y - 19) > 0) || P.x < 28 || P.x > 33) {
+				gotoxy(29, 19);    cout << "NEXT";
+				next = 0;
+			}
+		}
+
+		if (abs(P.y - 19) <= 1) {
+			if (P.x >= 5 && P.x <= 14) {
+				if (prev)goto base;
+				if (!next && !prev && !addnew) { gotoxy(arr[pos].x, arr[pos].y);   cout << pos + 1; }
+				gotopaint(5, 19, "PREVIOUS", 1);
+				prev = 1;
+			}
+			if (P.x >= 28 && P.x <= 33) {
+				if (next)goto base;
+				if (!next && !prev && !addnew) { gotoxy(arr[pos].x, arr[pos].y);  cout << pos + 1; }
+				gotopaint(29, 19, "NEXT", 1);
+				next = 1;
+			}
+
+		}
+	base:
+
+
+		if (GetKeyState(VK_LBUTTON) & 0x8000) { // clock left mouse button
+
+			Sleep(100);
+			if (!prev && !next) {
+
+				gotopaint(60, 3, "ADD NEW", 0);
+				gotopaint(72, 3, "DEL", 0);
+				int output = 5;		date thisDay(currentDate.year, currentDate.mon, pos + 1);
+				auto eventInThisDay = find(events.begin(), events.end(), thisDay);
+				if (eventInThisDay != events.end()) {	// if this day contains some events
+					while (eventInThisDay->eventDate == thisDay) {
+						gotoxy(58, output);
+						eventInThisDay->print();
+						eventInThisDay++;		output++;
+					}
+				}
+				
+
+
+				for (;;) {
+					if (_kbhit()) {
+						char ex = _getch();
+						if (ex == 27) {
+							for (int k = 0; k < events.size() + 4; k++) { gotoxy(58, k + 3); cout << "\t\t\t\t"; }
+							break;
+							ex = 0;
+						}
+					}
+
+					GetCursorPos(&P);
+					GetWindowRect(hwnd, &rect);
+					P.x = (P.x - rect.left) / 8.19;
+					P.y = (((P.y - rect.top) - 40) / 13.5);
+					if (P.y == 3) {
+						if (P.x >= 58 && P.x <= 68) {
+							if (addnew)goto out;
+							gotopaint(60, 3, "ADD NEW", 1);
+							addnew = 1;
+						}
+						else if (P.x >= 71 && P.x <= 75) {
+							if (del)goto out;
+							gotopaint(72, 3, "DEL", 1);
+							del = 1;
+						}
+
+					}
+					if (addnew && (P.x < 58 || P.x >68 || P.y != 3)) { gotopaint(60, 3, "ADD NEW", 0);   addnew = 0; }
+					if (del && (P.x < 71 || P.x >75 || P.y != 3)) { gotopaint(72, 3, "DEL", 0);   del = 0; }
+				out:
+					if (GetKeyState(VK_LBUTTON) & 0x8000) {
+						if (addnew) {
+							arr[pos].value = addNewEvent(date{ currentDate.year,currentDate.mon,currentDate.day });
+							addnew = 0;
+							textPaint(arr[pos].value);
+							gotoxy(arr[pos].x, arr[pos].y);
+
+							cout << pos + 1;
+							WHITE
+						}
+						else if (del) {
+							int result = walkByevents(/*size_event*/0 + 4, 5, 56); ///////////////////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!
+							if (result >= 0) deleteEvent(0);// (events, &size_event, size_event - 1 - (result - 5));        ///////////////////// HERE TOO
+						}
+						for (int i = 0; i < 7; i++) { gotoxy(48, i + 22); cout << "\t\t\t\t\t\t\t"; } // clear
+						gotoxy(59, 3);
+						cout << "\t\t\t";
+						for (int k = 0; k < /*size_event*/0 + 4; k++) { gotoxy(55, k + 3); cout << "\t\t\t\t"; }  //clear
+						break;
+					}
+
+				}
+			}
+			if(prev || next)currentDate.weekDay = weekDay;	// we change curent.weekDay in case if change month, otherwise callend remains the same
+			if (prev)return 0;
+			if (next)return 1;
+
+		}
+		char exit = 0;
+		if (_kbhit()) {
+			exit = _getch();
+		}
+		if (exit == 27)return 27;
+	}
+
+
+
 	cin >> cho;
+	if (cho == 1 || cho == 0)currentDate.weekDay=weekDay;	// we change curent.weekDay in case if change month, otherwise callend remains the same
 	return cho;
+}
+
+inline short Organizer::addNewEvent(const date & dat)
+{
+	return 0;
+}
+
+inline void Organizer::deleteEvent(size_t index)
+{
 }
 
 inline void Organizer::menu()
@@ -185,10 +360,10 @@ inline void Organizer::menu()
 			break;
 		}
 		case 0: {
-			currentDate.weekDay = 7 - ((currentDate.daysInMon - (currentDate.weekDay)) % 7);
+			currentDate.weekDay = 7 - ((currentDate.daysInMon - currentDate.weekDay) % 7);
 			currentDate.prevMon();
 			currentDate.controlDates();
-			currentDate.weekDay = 7 - ((currentDate.daysInMon - (currentDate.weekDay)) % 7);
+			currentDate.weekDay = 7 - ((currentDate.daysInMon - currentDate.weekDay) % 7);
 			break;
 		}
 		case 27: {
@@ -198,3 +373,5 @@ inline void Organizer::menu()
 		}
 	}
 }
+
+

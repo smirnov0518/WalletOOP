@@ -19,7 +19,7 @@ void Wallet::showTranslations(vector<Transaction>& transaction, COORD coord)
 			count_lines++;
 		}
 		gotoxy(coord.X, count_lines);
-		i->incomeSpend ? GREN : RED;
+		i->incomeSpend ? GREEN : RED;
 		cout << (i->actionDate.hour < 10 ? "0" : "");
 		cout << i->actionDate.hour << ':';
 		cout << (i->actionDate.min < 10 ? "0" : "");
@@ -35,7 +35,7 @@ void Wallet::showTranslation(Transaction& transaction, COORD coord)
 		WHITE_BLACK;
 		gotoxy(coord.X + 10, coord.Y);//позиція дати
 		cout << transaction.actionDate.year << '.' << transaction.actionDate.mon << '.' << transaction.actionDate.day;
-		transaction.incomeSpend ? GREN : RED;
+		transaction.incomeSpend ? GREEN : RED;
 		gotoxy(coord.X, coord.Y+1);//позиція транзакції
 		cout << (transaction.actionDate.hour < 10 ? "0" : "");
 		cout << transaction.actionDate.hour << ':';
@@ -482,6 +482,10 @@ SHOW_MAIN_MENU: // використовую коли виходжу із інш�
 			}
 			system("cls");
 			goto SHOW_MAIN_MENU;
+		}
+		case 49: {
+			WHITE
+			events.menu();
 		}
 		}
 	}

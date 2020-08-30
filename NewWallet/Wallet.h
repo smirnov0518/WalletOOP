@@ -9,6 +9,7 @@
 #include "Helper.h"
 #include <fstream>
 #include "CurencyStock.h"
+#include "Organizer.h"
 using std::string;		using std::vector;
 using std::cout;		using std::fstream;
 const HDC hdc = GetDC(GetConsoleWindow());
@@ -16,21 +17,7 @@ const HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 
 
-struct date {
-	int min=0;
-	int hour=0;
-	int day=0;
-	int mon=0;
-	int year=0;
-	void operator = (initializer_list<int>li[5]) {
-		min = *li->begin();		hour = *li->begin() + 1;	day = *li->begin() + 2;
-		mon = *li->begin() + 3;		year = *li->begin() + 4;
-	}
-	bool operator==(const date& objDate)const
-	{
-		return (objDate.year == year && objDate.mon == mon && objDate.day == day);
-	}
-};
+
 
 class Transaction {
 public:
@@ -76,6 +63,7 @@ private:
 	vector<Transaction> actions;
 	Category incomeCategories{ "incomeCat.dat" };
 	Category spendCategories{"spendCat.dat"};
+	Organizer events;
 	void showTranslations(vector<Transaction>& transaction, COORD coord);
 	void showTranslation(Transaction& transaction, COORD coord);
 	void income_and_spend_menu(bool parameter);
